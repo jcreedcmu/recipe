@@ -49,10 +49,28 @@ async function init(): Promise<void> {
 
 init();
 
+function escapeHtml(text: string): string {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function formatContent(content: string): string {
+  return content.split('\n').map(line => {
+    console.log('testing ', line);
+    if (/^[^:]+:$/.test(line.trim())) {
+      console.log('match');
+      const heading = line.trim().slice(0, -1);
+      return `<h3>${escapeHtml(heading)}</h3>`;
+    }
+    return escapeHtml(line);
+  }).join('\n');
+}
+
 function showRecipe(index: number, pushState: boolean = true): void {
   const recipe = recipes[index];
   detailTitle.textContent = recipe.name;
-  detailContent.textContent = recipe.content;
+  detailContent.innerHTML = formatContent(recipe.content);
   recipeList.classList.add('hidden');
   recipeDetail.classList.add('visible');
   backBtn.classList.add('visible');
