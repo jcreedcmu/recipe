@@ -60,9 +60,14 @@ header h1 {
 .recipe-detail {
   display: none;
   padding: 16px;
+  transform: translateX(0);
+  transition: transform 0.2s ease-out;
 }
 .recipe-detail.visible {
   display: block;
+}
+.recipe-detail.sliding-out {
+  transform: translateX(100%);
 }
 .recipe-detail h2 {
   font-size: 24px;

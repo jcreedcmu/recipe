@@ -166,6 +166,10 @@ document.addEventListener('touchend', (e: TouchEvent) => {
 
   // Swipe right to go back (only when viewing a recipe)
   if (deltaX > 80 && deltaY < 100 && recipeDetail.classList.contains('visible')) {
-    history.back();
+    recipeDetail.classList.add('sliding-out');
+    recipeDetail.addEventListener('transitionend', () => {
+      recipeDetail.classList.remove('sliding-out');
+      history.back();
+    }, { once: true });
   }
 });

@@ -7,4 +7,4 @@
 ✓ turn numbers into table entries
 ✓ adjust fonts/css
 ✓ 'skip' metadata on recipe entries
-- animation for swipe
+✓ animation for swipe
