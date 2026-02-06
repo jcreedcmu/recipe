@@ -1,6 +1,11 @@
+interface Recipe {
+  name: string;
+  content: string;
+}
+
 // Parse recipes
-function parseRecipes(data) {
-  const recipes = [];
+function parseRecipes(data: string): Recipe[] {
+  const recipes: Recipe[] = [];
   const parts = data.split(/^===\s*/m);
   for (const part of parts) {
     if (!part.trim()) continue;
@@ -12,14 +17,14 @@ function parseRecipes(data) {
   return recipes;
 }
 
-const recipeList = document.getElementById('recipeList');
-const recipeDetail = document.getElementById('recipeDetail');
-const detailTitle = document.getElementById('detailTitle');
-const detailContent = document.getElementById('detailContent');
-const backBtn = document.getElementById('backBtn');
-const headerTitle = document.getElementById('headerTitle');
+const recipeList = document.getElementById('recipeList')!;
+const recipeDetail = document.getElementById('recipeDetail')!;
+const detailTitle = document.getElementById('detailTitle')!;
+const detailContent = document.getElementById('detailContent')!;
+const backBtn = document.getElementById('backBtn')!;
+const headerTitle = document.getElementById('headerTitle')!;
 
-let recipes = [];
+let recipes: Recipe[] = [];
 
 // Fetch and render recipes
 fetch('RECIPE')
@@ -41,7 +46,7 @@ fetch('RECIPE')
     }
   });
 
-function showRecipe(index, pushState = true) {
+function showRecipe(index: number, pushState: boolean = true): void {
   const recipe = recipes[index];
   detailTitle.textContent = recipe.name;
   detailContent.textContent = recipe.content;
@@ -54,7 +59,7 @@ function showRecipe(index, pushState = true) {
   }
 }
 
-function showList() {
+function showList(): void {
   recipeList.classList.remove('hidden');
   recipeDetail.classList.remove('visible');
   backBtn.classList.remove('visible');
@@ -63,7 +68,7 @@ function showList() {
 
 backBtn.addEventListener('click', () => history.back());
 
-window.addEventListener('popstate', (event) => {
+window.addEventListener('popstate', (event: PopStateEvent) => {
   if (event.state && event.state.recipe !== undefined) {
     showRecipe(event.state.recipe, false);
   } else {
@@ -75,12 +80,12 @@ window.addEventListener('popstate', (event) => {
 let touchStartX = 0;
 let touchStartY = 0;
 
-document.addEventListener('touchstart', (e) => {
+document.addEventListener('touchstart', (e: TouchEvent) => {
   touchStartX = e.touches[0].clientX;
   touchStartY = e.touches[0].clientY;
 });
 
-document.addEventListener('touchend', (e) => {
+document.addEventListener('touchend', (e: TouchEvent) => {
   const touchEndX = e.changedTouches[0].clientX;
   const touchEndY = e.changedTouches[0].clientY;
   const deltaX = touchEndX - touchStartX;
