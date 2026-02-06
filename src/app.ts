@@ -55,16 +55,50 @@ function escapeHtml(text: string): string {
   return div.innerHTML;
 }
 
-function formatContent(content: string): string {
-  return content.split('\n').map(line => {
-    console.log('testing ', line);
-    if (/^[^:]+:$/.test(line.trim())) {
-      console.log('match');
-      const heading = line.trim().slice(0, -1);
-      return `<h3>${escapeHtml(heading)}</h3>`;
+function formatListLine(text: string): string {
+  const trimmed = text.trim().slice(2); // remove "- "
+  if (/^\d/.test(trimmed)) {
+    const spaceIndex = trimmed.indexOf(' ');
+    if (spaceIndex !== -1) {
+      const qty = trimmed.slice(0, spaceIndex);
+      const rest = trimmed.slice(spaceIndex + 1).replace(/^ +/, '');
+      return `<tr><td>${escapeHtml(qty)}</td><td>${escapeHtml(rest)}</td></tr>`;
     }
-    return escapeHtml(line);
-  }).join('\n');
+  }
+  return `<tr><td></td><td>${escapeHtml(trimmed)}</td></tr>`;
+}
+
+function formatContent(content: string): string {
+  const lines = content.split('\n');
+  const result: string[] = [];
+  let inTable = false;
+
+  for (const line of lines) {
+    const isListLine = line.trim().startsWith('- ');
+
+    if (isListLine && !inTable) {
+      result.push('<table>');
+      inTable = true;
+    } else if (!isListLine && inTable) {
+      result.push('</table>');
+      inTable = false;
+    }
+
+    if (isListLine) {
+      result.push(formatListLine(line));
+    } else if (/^[^:]+:$/.test(line.trim())) {
+      const heading = line.trim().slice(0, -1);
+      result.push(`<h3>${escapeHtml(heading)}</h3>`);
+    } else {
+      result.push(escapeHtml(line));
+    }
+  }
+
+  if (inTable) {
+    result.push('</table>');
+  }
+
+  return result.join('\n');
 }
 
 function showRecipe(index: number, pushState: boolean = true): void {
