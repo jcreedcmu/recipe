@@ -33,9 +33,15 @@ fetch('RECIPE')
       item.addEventListener('click', () => showRecipe(index));
       recipeList.appendChild(item);
     });
+
+    // Handle initial hash in URL
+    const hash = window.location.hash.slice(1);
+    if (hash && recipes[parseInt(hash)]) {
+      showRecipe(parseInt(hash), false);
+    }
   });
 
-function showRecipe(index) {
+function showRecipe(index, pushState = true) {
   const recipe = recipes[index];
   detailTitle.textContent = recipe.name;
   detailContent.textContent = recipe.content;
@@ -43,6 +49,9 @@ function showRecipe(index) {
   recipeDetail.classList.add('visible');
   backBtn.classList.add('visible');
   headerTitle.textContent = recipe.name;
+  if (pushState) {
+    history.pushState({ recipe: index }, '', `#${index}`);
+  }
 }
 
 function showList() {
@@ -52,4 +61,12 @@ function showList() {
   headerTitle.textContent = 'Recipes';
 }
 
-backBtn.addEventListener('click', showList);
+backBtn.addEventListener('click', () => history.back());
+
+window.addEventListener('popstate', (event) => {
+  if (event.state && event.state.recipe !== undefined) {
+    showRecipe(event.state.recipe, false);
+  } else {
+    showList();
+  }
+});
