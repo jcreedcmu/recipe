@@ -5,7 +5,7 @@ function parseRecipes(data) {
   for (const part of parts) {
     if (!part.trim()) continue;
     const lines = part.split('\n');
-    const name = lines[0].trim().replace(/\s*META:.*$/, '');
+    const name = lines[0].trim();
     const content = lines.slice(1).join('\n').trim();
     recipes.push({ name, content });
   }
