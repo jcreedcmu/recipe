@@ -70,3 +70,24 @@ window.addEventListener('popstate', (event) => {
     showList();
   }
 });
+
+// Swipe gesture support
+let touchStartX = 0;
+let touchStartY = 0;
+
+document.addEventListener('touchstart', (e) => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+});
+
+document.addEventListener('touchend', (e) => {
+  const touchEndX = e.changedTouches[0].clientX;
+  const touchEndY = e.changedTouches[0].clientY;
+  const deltaX = touchEndX - touchStartX;
+  const deltaY = Math.abs(touchEndY - touchStartY);
+
+  // Swipe right to go back (only when viewing a recipe)
+  if (deltaX > 80 && deltaY < 100 && recipeDetail.classList.contains('visible')) {
+    history.back();
+  }
+});
