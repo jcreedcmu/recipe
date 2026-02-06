@@ -27,24 +27,27 @@ const headerTitle = document.getElementById('headerTitle')!;
 let recipes: Recipe[] = [];
 
 // Fetch and render recipes
-fetch('RECIPE')
-  .then(response => response.text())
-  .then(recipeData => {
-    recipes = parseRecipes(recipeData);
-    recipes.forEach((recipe, index) => {
-      const item = document.createElement('div');
-      item.className = 'recipe-item';
-      item.innerHTML = `<h2>${recipe.name}</h2>`;
-      item.addEventListener('click', () => showRecipe(index));
-      recipeList.appendChild(item);
-    });
+async function init(): Promise<void> {
+  const response = await fetch('RECIPE');
+  const recipeData = await response.text();
+  recipes = parseRecipes(recipeData);
 
-    // Handle initial hash in URL
-    const hash = window.location.hash.slice(1);
-    if (hash && recipes[parseInt(hash)]) {
-      showRecipe(parseInt(hash), false);
-    }
+  recipes.forEach((recipe, index) => {
+    const item = document.createElement('div');
+    item.className = 'recipe-item';
+    item.innerHTML = `<h2>${recipe.name}</h2>`;
+    item.addEventListener('click', () => showRecipe(index));
+    recipeList.appendChild(item);
   });
+
+  // Handle initial hash in URL
+  const hash = window.location.hash.slice(1);
+  if (hash && recipes[parseInt(hash)]) {
+    showRecipe(parseInt(hash), false);
+  }
+}
+
+init();
 
 function showRecipe(index: number, pushState: boolean = true): void {
   const recipe = recipes[index];
