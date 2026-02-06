@@ -8,7 +8,8 @@
   "icons": [
     {
       "src": "donut.png",
-      "sizes": "any"
+      "sizes": "any",
+      "purpose": "maskable"
     }
   ]
 }
