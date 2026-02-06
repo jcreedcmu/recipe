@@ -73,8 +73,22 @@ function formatContent(content: string): string {
   const result: string[] = [];
   let inTable = false;
 
-  for (const line of lines) {
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
     const isListLine = line.trim().startsWith('- ');
+    const isHeading = /^[^:]+:$/.test(line.trim());
+    const isEmpty = line.trim() === '';
+
+    // Skip empty lines before/after block elements
+    if (isEmpty) {
+      const lastResult = result[result.length - 1] || '';
+      const nextLine = lines[i + 1]?.trim() || '';
+      const lastWasBlock = lastResult.startsWith('<') || inTable;
+      const nextIsBlock = nextLine.startsWith('- ') || /^[^:]+:$/.test(nextLine);
+      if (lastWasBlock || nextIsBlock) {
+        continue;
+      }
+    }
 
     if (isListLine && !inTable) {
       result.push('<table>');
@@ -86,7 +100,7 @@ function formatContent(content: string): string {
 
     if (isListLine) {
       result.push(formatListLine(line));
-    } else if (/^[^:]+:$/.test(line.trim())) {
+    } else if (isHeading) {
       const heading = line.trim().slice(0, -1);
       result.push(`<h3>${escapeHtml(heading)}</h3>`);
     } else {
