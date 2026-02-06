@@ -7,9 +7,8 @@
   "theme_color": "#4a7c59",
   "icons": [
     {
-      "src": "donut.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
+      "src": "donut.png",
+      "sizes": "any"
     }
   ]
 }
