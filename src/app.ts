@@ -1,6 +1,7 @@
 interface Recipe {
   name: string;
   content: string;
+  skip: boolean;
 }
 
 // Parse recipes
@@ -10,9 +11,11 @@ function parseRecipes(data: string): Recipe[] {
   for (const part of parts) {
     if (!part.trim()) continue;
     const lines = part.split('\n');
-    const name = lines[0].trim();
+    const firstLine = lines[0].trim();
+    const skip = /META:.*skip/.test(firstLine);
+    const name = firstLine.replace(/\s*META:.*$/, '');
     const content = lines.slice(1).join('\n').trim();
-    recipes.push({ name, content });
+    recipes.push({ name, content, skip });
   }
   return recipes;
 }
@@ -33,6 +36,7 @@ async function init(): Promise<void> {
   recipes = parseRecipes(recipeData);
 
   recipes.forEach((recipe, index) => {
+    if (recipe.skip) return;
     const item = document.createElement('div');
     item.className = 'recipe-item';
     item.innerHTML = `<h2>${recipe.name}</h2>`;
