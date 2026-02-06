@@ -33,7 +33,7 @@ jobs:
       - name: Prepare deployment
         run: |
           mkdir -p _site
-          cp index.html manifest.json RECIPE donut.png _site/ 2>/dev/null || true
+          cp index.html manifest.json RECIPE donut.png styles.css _site/ 2>/dev/null || true
           cp -r js _site/
 
       - uses: actions/upload-pages-artifact@v3
