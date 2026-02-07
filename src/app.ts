@@ -4,6 +4,10 @@ interface Recipe {
   skip: boolean;
 }
 
+function sanitizeAnchor(name: string): string {
+  return name.replace(/[^a-zA-Z ]/g, '').trim().replace(/ /g, '-').toLowerCase();
+}
+
 // Parse recipes
 function parseRecipes(data: string): Recipe[] {
   const recipes: Recipe[] = [];
@@ -46,8 +50,9 @@ async function init(): Promise<void> {
 
   // Handle initial hash in URL
   const hash = window.location.hash.slice(1);
-  if (hash && recipes[parseInt(hash)]) {
-    showRecipe(parseInt(hash), false);
+  const initialIndex = recipes.findIndex(r => sanitizeAnchor(r.name) === hash);
+  if (initialIndex !== -1) {
+    showRecipe(initialIndex, false);
   }
 }
 
@@ -127,7 +132,7 @@ function showRecipe(index: number, pushState: boolean = true): void {
   backBtn.classList.add('visible');
   headerTitle.textContent = recipe.name;
   if (pushState) {
-    history.pushState({ recipe: index }, '', `#${index}`);
+    history.pushState({ recipe: index }, '', `#${sanitizeAnchor(recipe.name)}`);
   }
 }
 
