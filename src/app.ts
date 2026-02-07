@@ -22,7 +22,6 @@ function parseRecipes(data: string): Recipe[] {
 
 const recipeList = document.getElementById('recipeList')!;
 const recipeDetail = document.getElementById('recipeDetail')!;
-const detailTitle = document.getElementById('detailTitle')!;
 const detailContent = document.getElementById('detailContent')!;
 const backBtn = document.getElementById('backBtn')!;
 const headerTitle = document.getElementById('headerTitle')!;
