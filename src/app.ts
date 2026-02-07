@@ -12,8 +12,8 @@ function parseRecipes(data: string): Recipe[] {
     if (!part.trim()) continue;
     const lines = part.split('\n');
     const firstLine = lines[0].trim();
-    const skip = /META:.*skip/.test(firstLine);
-    const name = firstLine.replace(/\s*META:.*$/, '');
+    const skip = /\[skip\]/.test(firstLine);
+    const name = firstLine;
     const content = lines.slice(1).join('\n').trim();
     recipes.push({ name, content, skip });
   }
@@ -121,7 +121,6 @@ function formatContent(content: string): string {
 
 function showRecipe(index: number, pushState: boolean = true): void {
   const recipe = recipes[index];
-  detailTitle.textContent = recipe.name;
   detailContent.innerHTML = formatContent(recipe.content);
   recipeList.classList.add('hidden');
   recipeDetail.classList.add('visible');
