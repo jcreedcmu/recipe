@@ -33,6 +33,7 @@ async function init(): Promise<void> {
   const response = await fetch('RECIPE');
   const recipeData = await response.text();
   recipes = parseRecipes(recipeData);
+  recipes.sort((a, b) => a.name.replace(/[^[a-zA-Z]/g, '').localeCompare(b.name.replace(/[^[a-zA-Z]/g, '')));
 
   recipes.forEach((recipe, index) => {
     if (recipe.skip) return;
